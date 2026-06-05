@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Setelan — Ryounime</title>
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/nav.css">
+  <style>
+    .settings-page { padding: calc(var(--header-h) + 12px) 0 calc(var(--bottom-nav-h) + 24px); }
+    .page-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      padding: 0 16px 16px;
+      letter-spacing: -0.02em;
+    }
+    .settings-group { margin-bottom: 24px; }
+    .settings-group-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 16px;
+      margin-bottom: 6px;
+    }
+    .settings-list {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .settings-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .settings-row:last-child { border-bottom: none; }
+    .settings-row:active { background: var(--bg-card-hover); }
+    .settings-row-icon {
+      width: 34px; height: 34px;
+      border-radius: var(--radius-sm);
+      background: var(--accent-dim);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .settings-row-icon svg { width: 16px; height: 16px; }
+    .settings-row-body { flex: 1; min-width: 0; }
+    .settings-row-title { font-size: 14px; font-weight: 600; }
+    .settings-row-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+    .settings-row-right { color: var(--text-muted); display: flex; align-items: center; gap: 6px; font-size: 13px; }
+    .settings-row-right svg { width: 14px; height: 14px; }
+
+    /* Toggle */
+    .toggle { position: relative; width: 40px; height: 22px; cursor: pointer; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-track { position: absolute; inset: 0; background: var(--text-muted); border-radius: 99px; transition: background var(--transition); }
+    .toggle input:checked + .toggle-track { background: var(--accent); }
+    .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: transform var(--transition); box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+    .toggle input:checked ~ .toggle-thumb { transform: translateX(18px); }
+
+    /* Theme picker */
+    .theme-picker {
+      display: flex;
+      gap: 10px;
+      padding: 12px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .theme-picker::-webkit-scrollbar { display: none; }
+    .theme-swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .theme-swatch-circle {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      transition: border-color var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .theme-swatch.active .theme-swatch-circle { border-color: var(--accent); }
+    .theme-swatch-circle::after {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+    }
+    .theme-swatch span { font-size: 10px; font-weight: 600; color: var(--text-muted); }
+    .swatch-dark   { background: #0a0a0f; } .swatch-dark::after   { background: #1c1c27; }
+    .swatch-amoled { background: #000; }    .swatch-amoled::after { background: #111; }
+    .swatch-light  { background: #f4f4f8; } .swatch-light::after  { background: #fff; }
+    .swatch-purple { background: #1a0a2e; } .swatch-purple::after { background: #a855f7; }
+    .swatch-blue   { background: #0a1628; } .swatch-blue::after   { background: #3b82f6; }
+
+    /* Accent color picker */
+    .color-picker { display: flex; gap: 10px; padding: 12px 16px; overflow-x: auto; scrollbar-width: none; }
+    .color-picker::-webkit-scrollbar { display: none; }
+    .color-dot {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: border-color var(--transition), transform var(--transition);
+      flex-shrink: 0;
+    }
+    .color-dot:active { transform: scale(0.9); }
+    .color-dot.active { border-color: var(--text-primary); }
+
+    /* App info */
+    .app-info {
+      text-align: center;
+      padding: 20px 16px 8px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+    .app-info strong { color: var(--text-secondary); font-size: 14px; display: block; margin-bottom: 4px; }
+    .version-badge {
+      display: inline-block;
+      background: var(--accent-dim);
+      color: var(--accent);
+      padding: 2px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* Modal bottom sheet */
+    .sheet-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition);
+    }
+    .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+    .sheet {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--bg-card);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      padding: 0 0 calc(env(safe-area-inset-bottom) + 16px);
+      z-index: 301;
+      transform: translateY(100%);
+      transition: transform var(--transition-slow);
+    }
+    .sheet.open { transform: none; }
+    .sheet-handle { width: 36px; height: 4px; background: var(--border); border-radius: 99px; margin: 12px auto 16px; }
+    .sheet-title { font-size: 15px; font-weight: 700; padding: 0 16px 12px; font-family: var(--font-display); }
+    .sheet-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .sheet-option:active { background: var(--bg-card-hover); }
+    .sheet-option.active { color: var(--accent); }
+    .sheet-option.active::after { content: '✓'; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-logo">
+    <div class="header-logo-mark">Ry</div>
+    <span class="header-logo-text">Ryou<span>nime</span></span>
+  </div>
+</header>
+
+<div class="settings-page">
+  <div class="page-title">Setelan</div>
+
+  <!-- TAMPILAN -->
+  <div class="settings-group">
+    <div class="settings-group-label">Tampilan</div>
+    <div class="settings-list">
+      <!-- Theme -->
+      <div class="settings-row" style="cursor:default;flex-direction:column;align-items:flex-start;gap:8px">
+        <div style="display:flex;align-items:center;gap:12px;width:100%">
+          <div class="settings-row-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+          </div>
+          <div class="settings-row-body">
+            <div class="settings-row-title">Tema</div>
+          </div>
+        </div>
+        <div class="theme-picker" id="theme-picker">
+          <div class="theme-swatch" data-theme="">
+            <div class="theme-swatch-circle swatch-dark"></div>
+            <span>Dark</span>
+          </div>
+          <div class="theme-swatch" data-theme="amoled">
+            <div class="theme-swatch-circle swatch-amoled"></div>
+            <span>AMOLED</span>
+          </div>
+          <div class="theme-swatch" data-theme="light">
+            <div class="theme-swatch-circle swatch-light"></div>
+            <span>Light</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accent color -->
+      <div class="settings-row" style="cursor:default;flex-direction:column;align-items:flex-start;gap:8px">
+        <div style="display:flex;align-items:center;gap:12px;width:100%">
+          <div class="settings-row-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+              <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+            </svg>
+          </div>
+          <div class="settings-row-body">
+            <div class="settings-row-title">Warna Aksen</div>
+          </div>
+        </div>
+        <div class="color-picker" id="color-picker">
+          <div class="color-dot" data-color="" style="background:#e63946" title="Merah"></div>
+          <div class="color-dot" data-color="purple" style="background:#a855f7" title="Ungu"></div>
+          <div class="color-dot" data-color="blue" style="background:#3b82f6" title="Biru"></div>
+          <div class="color-dot" data-color="green" style="background:#22c55e" title="Hijau"></div>
+          <div class="color-dot" data-color="orange" style="background:#f97316" title="Oranye"></div>
+          <div class="color-dot" data-color="pink" style="background:#ec4899" title="Pink"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAYER -->
+  <div class="settings-group">
+    <div class="settings-group-label">Player</div>
+    <div class="settings-list">
+      <div class="settings-row">
+        <div class="settings-row-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polygon points="5,3 19,12 5,21"/>
+          </svg>
+        </div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">Auto Next Episode</div>
+          <div class="settings-row-sub">Otomatis putar episode berikutnya</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="auto-next" checked>
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polygon points="5,3 19,12 5,21"/>
+            <path d="M5 3v18"/>
+          </svg>
+        </div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">Auto Play</div>
+          <div class="settings-row-sub">Langsung putar saat dibuka</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="auto-play" checked>
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+      <div class="settings-row" id="quality-row">
+        <div class="settings-row-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+          </svg>
+        </div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">Kualitas Default</div>
+          <div class="settings-row-sub" id="quality-label">Auto</div>
+        </div>
+        <div class="settings-row-right">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTITLE -->
+  <div class="settings-group">
+    <div class="settings-group-label">Subtitle</div>
+    <div class="settings-list">
+      <div class="settings-row" id="sub-lang-row">
+        <div class="settings-row-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">Bahasa Subtitle</div>
+          <div class="settings-row-sub" id="sub-lang-label">Indonesia</div>
+        </div>
+        <div class="settings-row-right">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+      </div>
+      <div class="settings-row" id="sub-size-row">
+        <div class="settings-row-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/>
+          </svg>
+        </div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">Ukuran Subtitle</div>
+          <div class="settings-row-sub" id="sub-size-label">Sedang</div>
+        </div>
+        <div class="settings-row-right">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA -->
+  <div class="settings-group">
+    <div class="settings-group-label">Data</div>
+    <div class="settings-list">
+      <div class="settings-row" id="clear-history-btn">
+        <div class="settings-row-icon" style="background:rgba(239,68,68,0.15);color:#ef4444">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
+          </svg>
+        </div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">Hapus Riwayat</div>
+          <div class="settings-row-sub">Bersihkan semua riwayat tontonan</div>
+        </div>
+      </div>
+      <div class="settings-row" id="clear-cache-btn">
+        <div class="settings-row-icon" style="background:rgba(239,68,68,0.15);color:#ef4444">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9"/>
+          </svg>
+        </div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">Bersihkan Cache</div>
+          <div class="settings-row-sub">Reset data sementara</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP INFO -->
+  <div class="app-info">
+    <strong>Ryounime</strong>
+    RS1 — Core Streaming
+    <br>
+    <span class="version-badge">v1.0.0</span>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-items">
+    <a href="/" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/>
+      </svg><span>Home</span>
+    </a>
+    <a href="/search.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4" stroke-linecap="round"/>
+      </svg><span>Cari</span>
+    </a>
+    <a href="/live.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/>
+      </svg><span>Live</span>
+    </a>
+    <a href="/favorites.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg><span>Favorit</span>
+    </a>
+    <a href="/settings.html" class="nav-item active">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg><span>Setelan</span>
+    </a>
+  </div>
+</nav>
+
+<!-- SHEET -->
+<div class="sheet-backdrop" id="sheet-backdrop"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title" id="sheet-title"></div>
+  <div id="sheet-options"></div>
+</div>
+
+<script src="/assets/js/utils.js"></script>
+<script>
+// ===== INIT =====
+const s = Settings.get();
+
+// Theme picker
+const currentTheme = s.theme || 'dark';
+document.querySelectorAll('.theme-swatch').forEach(sw => {
+  const t = sw.dataset.theme;
+  if ((t === '' && currentTheme === 'dark') || t === currentTheme) sw.classList.add('active');
+  sw.addEventListener('click', () => {
+    const theme = sw.dataset.theme || 'dark';
+    Settings.set('theme', theme === '' ? 'dark' : theme);
+    document.documentElement.setAttribute('data-theme', sw.dataset.theme);
+    document.querySelectorAll('.theme-swatch').forEach(s => s.classList.toggle('active', s === sw));
+  });
+});
+
+// Color picker
+const currentColor = s.accentColor || '';
+document.querySelectorAll('.color-dot').forEach(dot => {
+  if (dot.dataset.color === currentColor) dot.classList.add('active');
+  dot.addEventListener('click', () => {
+    Settings.set('accentColor', dot.dataset.color);
+    // Apply accent color via data-theme attribute
+    const baseTheme = Settings.get('theme') || 'dark';
+    const accentMap = { purple: 'purple', blue: 'blue', green: 'green', orange: 'orange', pink: 'pink' };
+    const accent = accentMap[dot.dataset.color];
+    const themeVal = accent ? accent : (baseTheme === 'dark' ? '' : baseTheme);
+    document.documentElement.setAttribute('data-theme', themeVal);
+    document.querySelectorAll('.color-dot').forEach(d => d.classList.toggle('active', d === dot));
+  });
+});
+
+// Toggles
+document.getElementById('auto-next').checked = s.autoNext !== false;
+document.getElementById('auto-play').checked = s.autoPlay !== false;
+document.getElementById('auto-next').addEventListener('change', e => Settings.set('autoNext', e.target.checked));
+document.getElementById('auto-play').addEventListener('change', e => Settings.set('autoPlay', e.target.checked));
+
+// Sheet
+const backdrop = document.getElementById('sheet-backdrop');
+const sheet = document.getElementById('sheet');
+function openSheet(title, options, currentVal, onSelect) {
+  document.getElementById('sheet-title').textContent = title;
+  document.getElementById('sheet-options').innerHTML = options.map(o => `
+    <div class="sheet-option ${o.value === currentVal ? 'active' : ''}" data-value="${o.value}">${o.label}</div>
+  `).join('');
+  document.querySelectorAll('.sheet-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      onSelect(opt.dataset.value, opt.textContent);
+      closeSheet();
+    });
+  });
+  backdrop.classList.add('open');
+  sheet.classList.add('open');
+}
+function closeSheet() { backdrop.classList.remove('open'); sheet.classList.remove('open'); }
+backdrop.addEventListener('click', closeSheet);
+
+// Quality
+const qualityOpts = [
+  { label: 'Auto', value: 'auto' },
+  { label: '1080p', value: '1080p' },
+  { label: '720p', value: '720p' },
+  { label: '480p', value: '480p' },
+  { label: '360p', value: '360p' },
+];
+document.getElementById('quality-label').textContent = qualityOpts.find(o => o.value === (s.quality || 'auto'))?.label || 'Auto';
+document.getElementById('quality-row').addEventListener('click', () => {
+  openSheet('Kualitas Default', qualityOpts, Settings.get('quality') || 'auto', (val, label) => {
+    Settings.set('quality', val);
+    document.getElementById('quality-label').textContent = label;
+  });
+});
+
+// Subtitle lang
+const langOpts = [
+  { label: 'Indonesia', value: 'id' },
+  { label: 'English', value: 'en' },
+  { label: 'Nonaktif', value: 'off' },
+];
+document.getElementById('sub-lang-label').textContent = langOpts.find(o => o.value === (s.subtitleLang || 'id'))?.label || 'Indonesia';
+document.getElementById('sub-lang-row').addEventListener('click', () => {
+  openSheet('Bahasa Subtitle', langOpts, Settings.get('subtitleLang') || 'id', (val, label) => {
+    Settings.set('subtitleLang', val);
+    document.getElementById('sub-lang-label').textContent = label;
+  });
+});
+
+// Subtitle size
+const sizeOpts = [
+  { label: 'Kecil', value: 'small' },
+  { label: 'Sedang', value: 'medium' },
+  { label: 'Besar', value: 'large' },
+];
+document.getElementById('sub-size-label').textContent = sizeOpts.find(o => o.value === (s.subtitleSize || 'medium'))?.label || 'Sedang';
+document.getElementById('sub-size-row').addEventListener('click', () => {
+  openSheet('Ukuran Subtitle', sizeOpts, Settings.get('subtitleSize') || 'medium', (val, label) => {
+    Settings.set('subtitleSize', val);
+    document.getElementById('sub-size-label').textContent = label;
+  });
+});
+
+// Clear history
+document.getElementById('clear-history-btn').addEventListener('click', () => {
+  if (confirm('Hapus semua riwayat tontonan?')) {
+    History.clear();
+    ContinueWatching._key && localStorage.removeItem('ryo_continue');
+    alert('Riwayat dihapus.');
+  }
+});
+
+// Clear cache
+document.getElementById('clear-cache-btn').addEventListener('click', () => {
+  if ('caches' in window) {
+    caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).then(() => alert('Cache dibersihkan.'));
+  } else {
+    alert('Cache dibersihkan.');
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "rcti",
+    "name": "RCTI",
+    "category": "entertainment",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/RCTI_logo.svg/200px-RCTI_logo.svg.png",
+    "url": "https://example.com/live/rcti/index.m3u8",
+    "type": "hls",
+    "now_playing": "Sinetron Primetime",
+    "quality": "1080p"
+  },
+  {
+    "id": "sctv",
+    "name": "SCTV",
+    "category": "entertainment",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/SCTV_logo_2017.svg/200px-SCTV_logo_2017.svg.png",
+    "url": "https://example.com/live/sctv/index.m3u8",
+    "type": "hls",
+    "now_playing": "Film Indonesia",
+    "quality": "720p"
+  },
+  {
+    "id": "metro-tv",
+    "name": "Metro TV",
+    "category": "news",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Metro_TV_logo.svg/200px-Metro_TV_logo.svg.png",
+    "url": "https://example.com/live/metrotv/index.m3u8",
+    "type": "hls",
+    "now_playing": "Metro Hari Ini",
+    "quality": "1080p"
+  },
+  {
+    "id": "tvone",
+    "name": "tvOne",
+    "category": "news",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/TvOne_logo.svg/200px-TvOne_logo.svg.png",
+    "url": "https://example.com/live/tvone/index.m3u8",
+    "type": "hls",
+    "now_playing": "Kabar Pagi",
+    "quality": "720p"
+  },
+  {
+    "id": "mnctv",
+    "name": "MNC TV",
+    "category": "entertainment",
+    "logo": "",
+    "url": "https://example.com/live/mnctv/index.m3u8",
+    "type": "hls",
+    "now_playing": "Anime Sore",
+    "quality": "720p"
+  }
+]

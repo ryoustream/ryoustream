@@ -1,0 +1,44 @@
+[
+  {
+    "ep": 1,
+    "title": "Akhir dari Petualangan",
+    "duration": 1456,
+    "thumbnail": "",
+    "sources": [
+      {
+        "name": "Sumber 1",
+        "type": "hls",
+        "url": "https://example.com/frieren/ep1/index.m3u8"
+      },
+      {
+        "name": "Sumber 2",
+        "type": "mp4",
+        "url": "https://example.com/frieren/ep1/720p.mp4"
+      }
+    ],
+    "subtitles": [
+      { "lang": "id", "label": "Indonesia", "url": "/subtitle/frieren-ep1-id.vtt" },
+      { "lang": "en", "label": "English", "url": "/subtitle/frieren-ep1-en.vtt" }
+    ]
+  },
+  {
+    "ep": 2,
+    "title": "Pemakaman Himmel",
+    "duration": 1440,
+    "sources": [
+      { "name": "Sumber 1", "type": "hls", "url": "https://example.com/frieren/ep2/index.m3u8" }
+    ],
+    "subtitles": [
+      { "lang": "id", "label": "Indonesia", "url": "/subtitle/frieren-ep2-id.vtt" }
+    ]
+  },
+  {
+    "ep": 3,
+    "title": "Kesepakatan dengan Manusia",
+    "duration": 1435,
+    "sources": [
+      { "name": "Sumber 1", "type": "hls", "url": "https://example.com/frieren/ep3/index.m3u8" }
+    ],
+    "subtitles": []
+  }
+]

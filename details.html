@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Detail — Ryounime</title>
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/nav.css">
+  <link rel="stylesheet" href="/assets/css/card.css">
+  <link rel="stylesheet" href="/assets/css/details.css">
+</head>
+<body>
+
+<main class="page" style="padding-top:0">
+
+  <!-- HERO BANNER -->
+  <div class="details-hero" id="details-hero">
+    <img class="details-banner" id="details-banner" src="/assets/images/placeholder.svg" alt="">
+    <div class="details-banner-overlay"></div>
+    <a href="javascript:history.back()" class="details-back">
+      <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+        <path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="details-body" id="details-body">
+    <!-- Skeleton -->
+    <div id="details-skeleton">
+      <div class="details-poster-row">
+        <div class="skeleton" style="width:100px;aspect-ratio:2/3;border-radius:var(--radius-md);flex-shrink:0"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:8px;padding-bottom:4px">
+          <div class="skeleton" style="height:22px;width:80%;border-radius:6px"></div>
+          <div class="skeleton" style="height:14px;width:50%;border-radius:6px"></div>
+          <div class="skeleton" style="height:12px;width:60%;border-radius:6px"></div>
+        </div>
+      </div>
+      <div class="skeleton" style="height:46px;border-radius:var(--radius-lg);margin-bottom:10px"></div>
+      <div class="skeleton" style="height:14px;width:100%;border-radius:6px;margin-bottom:6px"></div>
+      <div class="skeleton" style="height:14px;width:90%;border-radius:6px;margin-bottom:6px"></div>
+      <div class="skeleton" style="height:14px;width:75%;border-radius:6px"></div>
+    </div>
+
+    <!-- Content (hidden until loaded) -->
+    <div id="details-content" style="display:none" class="fade-in"></div>
+  </div>
+
+  <!-- RELATED / RECOMMENDATION -->
+  <section class="section" id="related-section" style="display:none">
+    <div class="section-header">
+      <span class="section-title">Rekomendasi</span>
+    </div>
+    <div class="scroll-row" id="related-row"></div>
+  </section>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-items">
+    <a href="/" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/>
+      </svg><span>Home</span>
+    </a>
+    <a href="/search.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4" stroke-linecap="round"/>
+      </svg><span>Cari</span>
+    </a>
+    <a href="/live.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/>
+      </svg><span>Live</span>
+    </a>
+    <a href="/favorites.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg><span>Favorit</span>
+    </a>
+    <a href="/settings.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg><span>Setelan</span>
+    </a>
+  </div>
+</nav>
+
+<script src="/assets/js/utils.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+(async function() {
+  const id = getParam('id');
+  if (!id) { location.href = '/'; return; }
+
+  let anime;
+  try { anime = await App.getAnimeById(id); }
+  catch { document.getElementById('details-body').innerHTML = '<div style="padding:32px 16px;text-align:center;color:var(--text-muted)">Anime tidak ditemukan.</div>'; return; }
+
+  // Banner
+  if (anime.banner) {
+    document.getElementById('details-banner').src = anime.banner;
+  }
+  document.title = `${anime.title} — Ryounime`;
+
+  // Check saved state
+  const isFav = Favorites.has(id);
+  const isWatchlist = Watchlist.has(id);
+  const continueItem = ContinueWatching.get(id);
+
+  // Render content
+  const content = document.getElementById('details-content');
+  content.innerHTML = `
+    <div class="details-poster-row">
+      <div class="details-poster">
+        <img src="${anime.poster || '/assets/images/placeholder.svg'}" alt="${anime.title}" class="watch-poster-img">
+      </div>
+      <div class="details-title-block">
+        <h1 class="details-title">${anime.title}</h1>
+        ${anime.title_alt ? `<div class="details-alt-title">${anime.title_alt}</div>` : ''}
+        ${anime.studio ? `<div class="details-studio">${anime.studio}</div>` : ''}
+      </div>
+    </div>
+
+    <div class="details-stats">
+      ${anime.year ? `<div class="stat-chip"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="12" height="12"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${anime.year}</div>` : ''}
+      ${anime.type ? `<div class="stat-chip accent-chip">${anime.type}</div>` : ''}
+      ${anime.status ? `<div class="stat-chip">${anime.status === 'ongoing' ? '🟢 Ongoing' : anime.status === 'completed' ? '✅ Completed' : '🔜 Upcoming'}</div>` : ''}
+      ${anime.total_eps ? `<div class="stat-chip">${anime.total_eps} Episode</div>` : ''}
+      ${anime.rating ? `<div class="stat-chip accent-chip">⭐ ${anime.rating}</div>` : ''}
+    </div>
+
+    <a href="/watch.html?id=${id}&ep=${continueItem ? continueItem.ep : 1}" class="details-play-btn">
+      <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+      ${continueItem ? `Lanjut EP ${continueItem.ep}` : 'Tonton Sekarang'}
+    </a>
+
+    <div class="details-actions-row">
+      <button class="details-action-btn ${isFav ? 'active' : ''}" id="fav-btn">
+        <svg fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="15" height="15">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        ${isFav ? 'Difavoritkan' : 'Favorit'}
+      </button>
+      <button class="details-action-btn ${isWatchlist ? 'active' : ''}" id="watchlist-btn">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="15" height="15">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+        </svg>
+        ${isWatchlist ? 'Di Watchlist' : 'Watchlist'}
+      </button>
+    </div>
+
+    ${anime.genres?.length ? `
+      <div class="genre-list">
+        ${anime.genres.map(g => `<a href="/search.html?genre=${encodeURIComponent(g)}" class="genre-tag">${g}</a>`).join('')}
+      </div>
+    ` : ''}
+
+    ${anime.synopsis ? `
+      <div class="synopsis-block">
+        <div class="synopsis-text line-clamp-3" id="synopsis-text">${anime.synopsis}</div>
+        <span class="synopsis-toggle" id="synopsis-toggle">Selengkapnya</span>
+      </div>
+    ` : ''}
+  `;
+
+  document.getElementById('details-skeleton').remove();
+  content.style.display = '';
+
+  // Synopsis toggle
+  const synEl = document.getElementById('synopsis-text');
+  const synToggle = document.getElementById('synopsis-toggle');
+  if (synEl && synToggle) {
+    let expanded = false;
+    synToggle.addEventListener('click', () => {
+      expanded = !expanded;
+      synEl.className = expanded ? 'synopsis-text' : 'synopsis-text line-clamp-3';
+      synToggle.textContent = expanded ? 'Lebih sedikit' : 'Selengkapnya';
+    });
+  }
+
+  // Fav button
+  document.getElementById('fav-btn').addEventListener('click', function() {
+    const added = Favorites.toggle({ id, title: anime.title, poster: anime.poster, type: anime.type, year: anime.year });
+    this.classList.toggle('active', added);
+    this.querySelector('svg').setAttribute('fill', added ? 'currentColor' : 'none');
+    this.lastChild.textContent = added ? ' Difavoritkan' : ' Favorit';
+  });
+
+  // Watchlist button
+  document.getElementById('watchlist-btn').addEventListener('click', function() {
+    const added = Watchlist.toggle({ id, title: anime.title, poster: anime.poster, type: anime.type, year: anime.year });
+    this.classList.toggle('active', added);
+    this.lastChild.textContent = added ? ' Di Watchlist' : ' Watchlist';
+  });
+
+  // Recommendations
+  try {
+    const all = await App.getAnimeIndex();
+    const recs = getRecommendations(anime, all, 10);
+    if (recs.length) {
+      const relSection = document.getElementById('related-section');
+      relSection.style.display = '';
+      const relRow = document.getElementById('related-row');
+      relRow.innerHTML = recs.map(a => `
+        <a href="/details.html?id=${a.id}" class="card card-poster">
+          <div class="card-thumb">
+            <img data-src="${a.poster || '/assets/images/placeholder.svg'}" alt="${a.title}" src="/assets/images/placeholder.svg">
+            <div class="card-overlay"></div>
+          </div>
+          <div class="card-info">
+            <div class="card-title line-clamp-2">${a.title}</div>
+            <div class="card-meta"><span>${a.year || ''}</span></div>
+          </div>
+        </a>
+      `).join('');
+      initLazyImages(relRow);
+    }
+  } catch {}
+
+})();
+</script>
+</body>
+</html>

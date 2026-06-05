@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Cari — Ryounime</title>
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/nav.css">
+  <link rel="stylesheet" href="/assets/css/card.css">
+  <style>
+    .search-page { padding: calc(var(--header-h) + 8px) 0 calc(var(--bottom-nav-h) + 16px); }
+
+    .search-sticky {
+      position: sticky;
+      top: var(--header-h);
+      z-index: 50;
+      background: var(--bg-overlay);
+      backdrop-filter: blur(12px);
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .search-field {
+      position: relative;
+    }
+    .search-field input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 16px 10px 40px;
+      color: var(--text-primary);
+      font-size: 15px;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .search-field input:focus { border-color: var(--border-accent); }
+    .search-field svg {
+      position: absolute;
+      left: 12px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      width: 16px; height: 16px;
+    }
+
+    /* Filters */
+    .filters-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 10px 16px 4px;
+      scrollbar-width: none;
+    }
+    .filters-row::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .filter-chip.active {
+      background: var(--accent-dim);
+      border-color: var(--border-accent);
+      color: var(--accent);
+    }
+    .filter-chip:active { transform: scale(0.97); }
+
+    /* Sort tabs */
+    .sort-tabs {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding: 8px 16px 0;
+      scrollbar-width: none;
+    }
+    .sort-tabs::-webkit-scrollbar { display: none; }
+    .sort-tab {
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .sort-tab.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Results header */
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 8px;
+    }
+    .results-count {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .results-count span { color: var(--text-primary); font-weight: 600; }
+
+    /* Empty state */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 32px;
+      text-align: center;
+      gap: 12px;
+    }
+    .empty-state svg { color: var(--text-muted); opacity: 0.4; }
+    .empty-state h3 { font-size: 16px; font-weight: 700; }
+    .empty-state p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-logo">
+    <div class="header-logo-mark">Ry</div>
+    <span class="header-logo-text">Ryou<span>nime</span></span>
+  </div>
+</header>
+
+<div class="search-page">
+  <!-- Search bar (sticky) -->
+  <div class="search-sticky">
+    <div class="search-field">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4" stroke-linecap="round"/>
+      </svg>
+      <input type="search" id="search-input" placeholder="Cari anime, movie, series…" autocomplete="off">
+    </div>
+  </div>
+
+  <!-- Sort tabs -->
+  <div class="sort-tabs" id="sort-tabs">
+    <button class="sort-tab active" data-sort="">Semua</button>
+    <button class="sort-tab" data-sort="trending">Trending</button>
+    <button class="sort-tab" data-sort="popular">Populer</button>
+    <button class="sort-tab" data-sort="latest">Terbaru</button>
+    <button class="sort-tab" data-sort="rating">Rating</button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-row" id="filters-row">
+    <button class="filter-chip active" data-filter="type" data-value="">Semua Tipe</button>
+    <button class="filter-chip" data-filter="type" data-value="TV">TV</button>
+    <button class="filter-chip" data-filter="type" data-value="Movie">Movie</button>
+    <button class="filter-chip" data-filter="type" data-value="OVA">OVA</button>
+    <button class="filter-chip" data-filter="type" data-value="ONA">ONA</button>
+    <button class="filter-chip" data-filter="status" data-value="">Semua Status</button>
+    <button class="filter-chip" data-filter="status" data-value="ongoing">Ongoing</button>
+    <button class="filter-chip" data-filter="status" data-value="completed">Completed</button>
+  </div>
+
+  <!-- Results -->
+  <div class="results-header">
+    <div class="results-count" id="results-count">Memuat…</div>
+  </div>
+
+  <div id="results-grid" class="grid-cards" style="padding-bottom:8px"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-items">
+    <a href="/" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/>
+      </svg><span>Home</span>
+    </a>
+    <a href="/search.html" class="nav-item active">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4" stroke-linecap="round"/>
+      </svg><span>Cari</span>
+    </a>
+    <a href="/live.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/>
+      </svg><span>Live</span>
+    </a>
+    <a href="/favorites.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg><span>Favorit</span>
+    </a>
+    <a href="/settings.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg><span>Setelan</span>
+    </a>
+  </div>
+</nav>
+
+<script src="/assets/js/utils.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+(async function() {
+  let allAnime = [];
+  let query = '', sortBy = getParam('sort') || '', filterType = '', filterStatus = '';
+
+  // Load genre from URL
+  const genreParam = getParam('genre');
+  if (genreParam) query = '';
+
+  const grid = document.getElementById('results-grid');
+  const countEl = document.getElementById('results-count');
+
+  // Load all
+  try {
+    allAnime = await App.getAnimeIndex();
+  } catch {
+    countEl.textContent = 'Gagal memuat data.';
+    return;
+  }
+
+  // Pre-fill search from URL
+  const urlQuery = getParam('q');
+  if (urlQuery) {
+    document.getElementById('search-input').value = urlQuery;
+    query = urlQuery;
+  }
+  if (genreParam) filterType = ''; // genre filter via filterAnime
+
+  // Sort tab init
+  document.querySelectorAll('.sort-tab').forEach(tab => {
+    if (tab.dataset.sort === sortBy) {
+      document.querySelectorAll('.sort-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    }
+    tab.addEventListener('click', () => {
+      sortBy = tab.dataset.sort;
+      document.querySelectorAll('.sort-tab').forEach(t => t.classList.toggle('active', t === tab));
+      render();
+    });
+  });
+
+  // Filter chips
+  document.querySelectorAll('[data-filter="type"]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      filterType = chip.dataset.value;
+      document.querySelectorAll('[data-filter="type"]').forEach(c => c.classList.toggle('active', c === chip));
+      render();
+    });
+  });
+  document.querySelectorAll('[data-filter="status"]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      filterStatus = chip.dataset.value;
+      document.querySelectorAll('[data-filter="status"]').forEach(c => c.classList.toggle('active', c === chip));
+      render();
+    });
+  });
+
+  // Search input
+  document.getElementById('search-input').addEventListener('input', debounce(e => {
+    query = e.target.value.trim();
+    render();
+  }, 300));
+
+  function sortList(list) {
+    switch (sortBy) {
+      case 'trending': return [...list].sort((a,b) => (b.trending_score||0)-(a.trending_score||0));
+      case 'popular': return [...list].sort((a,b) => (b.popularity||0)-(a.popularity||0));
+      case 'latest': return [...list].sort((a,b) => new Date(b.last_updated||0)-new Date(a.last_updated||0));
+      case 'rating': return [...list].sort((a,b) => (b.rating||0)-(a.rating||0));
+      default: return list;
+    }
+  }
+
+  function render() {
+    let result = searchAnime(allAnime, query);
+    if (genreParam && !query) result = result.filter(a => a.genres?.includes(genreParam));
+    result = filterAnime(result, {
+      type: filterType || undefined,
+      status: filterStatus || undefined,
+    });
+    result = sortList(result);
+
+    countEl.innerHTML = `<span>${result.length}</span> hasil`;
+
+    if (!result.length) {
+      grid.innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1">
+          <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4" stroke-linecap="round"/>
+          </svg>
+          <h3>Tidak ditemukan</h3>
+          <p>Coba kata kunci lain atau ubah filter.</p>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = result.slice(0, 60).map(a => `
+      <a href="/details.html?id=${a.id}" class="card card-poster fade-in">
+        <div class="card-thumb">
+          <img data-src="${a.poster || '/assets/images/placeholder.svg'}" alt="${a.title}" src="/assets/images/placeholder.svg">
+          <div class="card-overlay"></div>
+          ${a.type ? `<div class="card-badges"><span class="badge badge-accent">${a.type}</span></div>` : ''}
+          ${a.total_eps ? `<div class="card-ep-badge">${a.total_eps} ep</div>` : ''}
+        </div>
+        <div class="card-info">
+          <div class="card-title line-clamp-2">${a.title}</div>
+          <div class="card-meta">
+            ${a.year ? `<span>${a.year}</span>` : ''}
+            ${a.rating ? `<span class="card-meta-dot"></span><span>⭐ ${a.rating}</span>` : ''}
+          </div>
+        </div>
+      </a>
+    `).join('');
+    initLazyImages(grid);
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

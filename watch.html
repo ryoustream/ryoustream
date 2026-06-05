@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>Watch — Ryounime</title>
+
+  <!-- Plyr -->
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
+
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/nav.css">
+  <link rel="stylesheet" href="/assets/css/card.css">
+  <link rel="stylesheet" href="/assets/css/player.css">
+</head>
+<body>
+
+<div class="watch-page">
+
+  <!-- VIDEO -->
+  <div class="video-wrap" id="video-wrap">
+    <video id="ryou-video" playsinline></video>
+  </div>
+
+  <!-- SOURCE BAR -->
+  <div style="padding:10px 0 2px">
+    <div class="source-bar" id="source-bar"></div>
+  </div>
+
+  <!-- WATCH INFO -->
+  <div class="watch-info">
+    <h1 class="watch-title" id="watch-title">Memuat…</h1>
+    <div class="watch-ep-label" id="watch-ep-label"></div>
+    <div class="watch-meta-row" id="watch-meta-row"></div>
+  </div>
+
+  <!-- AUTO NEXT -->
+  <div class="auto-next-row">
+    <span class="auto-next-label">Auto Next Episode</span>
+    <label class="toggle">
+      <input type="checkbox" id="auto-next-toggle">
+      <div class="toggle-track"></div>
+      <div class="toggle-thumb"></div>
+    </label>
+  </div>
+
+  <!-- EPISODE LIST -->
+  <div class="ep-section">
+    <div class="ep-section-header">
+      <span class="ep-section-title">Episode</span>
+      <div class="ep-filter" id="ep-filter"></div>
+    </div>
+    <div class="ep-grid" id="ep-grid">
+      <div style="grid-column:1/-1;display:flex;justify-content:center;padding:16px"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- RELATED -->
+  <section class="section" id="related-section" style="display:none">
+    <div class="section-header">
+      <span class="section-title">Rekomendasi</span>
+    </div>
+    <div class="scroll-row" id="related-row"></div>
+  </section>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-items">
+    <a href="/" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/>
+      </svg><span>Home</span>
+    </a>
+    <a href="/search.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4" stroke-linecap="round"/>
+      </svg><span>Cari</span>
+    </a>
+    <a href="/live.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/>
+      </svg><span>Live</span>
+    </a>
+    <a href="/favorites.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg><span>Favorit</span>
+    </a>
+    <a href="/settings.html" class="nav-item">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg><span>Setelan</span>
+    </a>
+  </div>
+</nav>
+
+<!-- HLS.js + Plyr -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
+<script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+
+<script src="/assets/js/utils.js"></script>
+<script src="/assets/js/app.js"></script>
+<script src="/assets/js/player.js"></script>
+<script>
+(async function() {
+  const animeId = getParam('id');
+  let currentEp = Number(getParam('ep')) || 1;
+  if (!animeId) { location.href = '/'; return; }
+
+  // Init auto-next toggle
+  const autoNextToggle = document.getElementById('auto-next-toggle');
+  autoNextToggle.checked = Settings.get('autoNext');
+  autoNextToggle.addEventListener('change', () => Settings.set('autoNext', autoNextToggle.checked));
+
+  let anime, episodes;
+  try {
+    [anime, episodes] = await Promise.all([
+      App.getAnimeById(animeId),
+      App.getEpisodes(animeId),
+    ]);
+  } catch(e) {
+    document.getElementById('watch-title').textContent = 'Gagal memuat data.';
+    return;
+  }
+
+  document.title = `${anime.title} — Ryounime`;
+  document.querySelector('.watch-title').textContent = anime.title;
+
+  // Meta
+  document.getElementById('watch-meta-row').innerHTML = `
+    ${anime.type ? `<span class="badge badge-accent">${anime.type}</span>` : ''}
+    ${anime.year ? `<span class="badge badge-dark">${anime.year}</span>` : ''}
+    ${anime.status ? `<span class="badge badge-dark">${anime.status}</span>` : ''}
+  `;
+
+  // ===== EPISODE GRID =====
+  const CHUNK = 50;
+  let epChunk = 0;
+
+  function getWatchedEps() {
+    return Storage.get(`watched_${animeId}`, []);
+  }
+  function markWatched(ep) {
+    const w = getWatchedEps();
+    if (!w.includes(ep)) { w.push(ep); Storage.set(`watched_${animeId}`, w); }
+  }
+
+  function renderEpGrid(chunk = 0) {
+    const watched = getWatchedEps();
+    const start = chunk * CHUNK;
+    const slice = episodes.slice(start, start + CHUNK);
+    const grid = document.getElementById('ep-grid');
+    grid.innerHTML = slice.map(e => `
+      <button class="ep-btn ${e.ep === currentEp ? 'active' : ''} ${watched.includes(e.ep) && e.ep !== currentEp ? 'watched' : ''}"
+              data-ep="${e.ep}">
+        ${e.ep}
+      </button>
+    `).join('');
+    grid.querySelectorAll('.ep-btn').forEach(btn => {
+      btn.addEventListener('click', () => loadEp(Number(btn.dataset.ep)));
+    });
+  }
+
+  function renderEpFilter() {
+    const filter = document.getElementById('ep-filter');
+    const chunks = Math.ceil(episodes.length / CHUNK);
+    if (chunks <= 1) return;
+    filter.innerHTML = Array.from({ length: chunks }, (_, i) => {
+      const s = i * CHUNK + 1;
+      const e = Math.min((i + 1) * CHUNK, episodes.length);
+      return `<button class="ep-range-btn ${i === 0 ? 'active' : ''}" data-chunk="${i}">${s}–${e}</button>`;
+    }).join('');
+    filter.querySelectorAll('.ep-range-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        epChunk = Number(btn.dataset.chunk);
+        filter.querySelectorAll('.ep-range-btn').forEach(b => b.classList.toggle('active', b === btn));
+        renderEpGrid(epChunk);
+      });
+    });
+  }
+
+  renderEpFilter();
+  renderEpGrid(0);
+
+  // ===== LOAD EPISODE =====
+  async function loadEp(ep) {
+    currentEp = ep;
+    const epData = await App.getEpisode(animeId, ep);
+    if (!epData) { alert('Episode tidak ditemukan.'); return; }
+
+    document.getElementById('watch-ep-label').textContent =
+      epData.title ? `EP ${ep} — ${epData.title}` : `Episode ${ep}`;
+
+    // Update URL
+    history.replaceState(null, '', buildUrl('/watch.html', { id: animeId, ep }));
+
+    // Source bar
+    const srcManager = App.createSourceManager(epData);
+    const sourceBar = document.getElementById('source-bar');
+    sourceBar.innerHTML = srcManager.sources.map((s, i) => `
+      <button class="source-chip ${i === 0 ? 'active' : ''}" data-i="${i}">
+        <span class="dot"></span>
+        ${s.name || `Sumber ${i+1}`}
+      </button>
+    `).join('');
+    sourceBar.querySelectorAll('.source-chip').forEach(btn => {
+      btn.addEventListener('click', () => Player.selectSource(Number(btn.dataset.i)));
+    });
+
+    // Player
+    Player.destroy();
+    Player.init({ animeId, ep, srcManager });
+
+    // Mark watched
+    markWatched(ep);
+    History.add({ animeId, animeTitle: anime.title, ep, poster: anime.poster });
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Refresh ep grid
+    const chunk = Math.floor((ep - 1) / CHUNK);
+    if (chunk !== epChunk) {
+      epChunk = chunk;
+      document.querySelectorAll('.ep-range-btn').forEach((b,i) => b.classList.toggle('active', i === chunk));
+      renderEpGrid(chunk);
+    } else {
+      renderEpGrid(epChunk);
+    }
+
+    // Scroll ep into view
+    setTimeout(() => {
+      const activeBtn = document.querySelector('.ep-btn.active');
+      activeBtn?.scrollIntoView({ block: 'nearest' });
+    }, 100);
+  }
+
+  await loadEp(currentEp);
+
+  // ===== RECOMMENDATIONS =====
+  try {
+    const all = await App.getAnimeIndex();
+    const recs = getRecommendations(anime, all, 8);
+    if (recs.length) {
+      const relSection = document.getElementById('related-section');
+      relSection.style.display = '';
+      document.getElementById('related-row').innerHTML = recs.map(a => `
+        <a href="/details.html?id=${a.id}" class="card card-poster">
+          <div class="card-thumb">
+            <img data-src="${a.poster || '/assets/images/placeholder.svg'}" alt="${a.title}" src="/assets/images/placeholder.svg">
+            <div class="card-overlay"></div>
+          </div>
+          <div class="card-info">
+            <div class="card-title line-clamp-2">${a.title}</div>
+            <div class="card-meta"><span>${a.year || ''}</span></div>
+          </div>
+        </a>
+      `).join('');
+      initLazyImages(document.getElementById('related-row'));
+    }
+  } catch {}
+
+})();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+</script>
+</body>
+</html>

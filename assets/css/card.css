@@ -1,0 +1,146 @@
+/* ===== ANIME CARD ===== */
+.card {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+.card:active { transform: scale(0.97); }
+
+/* Poster card (vertical, 2:3) */
+.card-poster {
+  width: 130px;
+}
+.card-poster .card-thumb {
+  aspect-ratio: 2/3;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+.card-poster .card-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.card-poster:hover .card-thumb img { transform: scale(1.05); }
+
+.card-thumb .card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.card:hover .card-overlay { opacity: 1; }
+
+.card-thumb .card-badges {
+  position: absolute;
+  top: 6px; left: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.card-thumb .card-ep-badge {
+  position: absolute;
+  bottom: 6px; right: 6px;
+  background: rgba(0,0,0,0.75);
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.card-thumb .card-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.card:hover .card-play { opacity: 1; }
+.card-play-icon {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
+.card-play-icon svg { width: 14px; height: 14px; fill: #fff; margin-left: 2px; }
+
+.card-info {
+  padding: 8px;
+}
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+.card-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.card-meta-dot {
+  width: 2px; height: 2px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Wide card (16:9) for continue watching */
+.card-wide {
+  width: 220px;
+}
+.card-wide .card-thumb {
+  aspect-ratio: 16/9;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+.card-wide .card-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.card-wide .card-progress {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.15);
+}
+.card-wide .card-progress-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 99px;
+}
+.card-wide .card-info { padding: 8px 10px; }
+.card-wide .card-ep-label {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+/* Score badge */
+.score-badge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fbbf24;
+}
+.score-badge svg { width: 11px; height: 11px; fill: #fbbf24; }

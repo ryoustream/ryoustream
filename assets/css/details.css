@@ -1,0 +1,206 @@
+/* ===== DETAILS PAGE ===== */
+.details-hero {
+  position: relative;
+  width: 100%;
+  height: 55vw;
+  min-height: 200px;
+  max-height: 360px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+.details-banner {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+.details-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10,10,15,0.3) 0%,
+    var(--bg-primary) 100%
+  );
+}
+.details-back {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top));
+  left: 12px;
+  width: 36px; height: 36px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  z-index: 1;
+}
+.details-back svg { width: 16px; height: 16px; }
+
+.details-body {
+  padding: 0 16px;
+  margin-top: -40px;
+  position: relative;
+  z-index: 1;
+}
+
+.details-poster-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+  margin-bottom: 14px;
+}
+.details-poster {
+  width: 100px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  flex-shrink: 0;
+  border: 2px solid var(--border);
+}
+.details-poster img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  aspect-ratio: 2/3;
+}
+.details-title-block { flex: 1; min-width: 0; }
+.details-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.details-alt-title {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.details-studio {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Stats row */
+.details-stats {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.stat-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.stat-chip svg { width: 12px; height: 12px; }
+.stat-chip.accent-chip {
+  background: var(--accent-dim);
+  border-color: var(--border-accent);
+  color: var(--accent);
+}
+
+/* Play button large */
+.details-play-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: var(--shadow-accent);
+  transition: all var(--transition);
+  margin-bottom: 10px;
+}
+.details-play-btn:active { transform: scale(0.98); opacity: 0.9; }
+.details-play-btn svg { width: 16px; height: 16px; fill: #fff; }
+
+.details-actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.details-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+}
+.details-action-btn:active { transform: scale(0.97); }
+.details-action-btn.active {
+  background: var(--accent-dim);
+  border-color: var(--border-accent);
+  color: var(--accent);
+}
+.details-action-btn svg { width: 15px; height: 15px; }
+
+/* Genres */
+.genre-list {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.genre-tag {
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.genre-tag:active {
+  background: var(--accent-dim);
+  border-color: var(--border-accent);
+  color: var(--accent);
+}
+
+/* Synopsis */
+.synopsis-block { margin-bottom: 20px; }
+.synopsis-text {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+.synopsis-toggle {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 6px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
