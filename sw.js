@@ -1,35 +1,34 @@
 const CACHE = 'ryounime-v1';
+const BASE = '/ryoustream';
 const STATIC = [
-  '/',
-  '/index.html',
-  '/search.html',
-  '/details.html',
-  '/watch.html',
-  '/favorites.html',
-  '/live.html',
-  '/settings.html',
-  '/assets/css/base.css',
-  '/assets/css/vars.css',
-  '/assets/css/nav.css',
-  '/assets/css/hero.css',
-  '/assets/css/card.css',
-  '/assets/css/player.css',
-  '/assets/css/details.css',
-  '/assets/js/utils.js',
-  '/assets/js/app.js',
-  '/assets/js/player.js',
-  '/assets/images/placeholder.svg',
-  '/manifest.json',
+  BASE + '/',
+  BASE + '/index.html',
+  BASE + '/search.html',
+  BASE + '/details.html',
+  BASE + '/watch.html',
+  BASE + '/favorites.html',
+  BASE + '/live.html',
+  BASE + '/settings.html',
+  BASE + '/assets/css/base.css',
+  BASE + '/assets/css/vars.css',
+  BASE + '/assets/css/nav.css',
+  BASE + '/assets/css/hero.css',
+  BASE + '/assets/css/card.css',
+  BASE + '/assets/css/player.css',
+  BASE + '/assets/css/details.css',
+  BASE + '/assets/js/utils.js',
+  BASE + '/assets/js/app.js',
+  BASE + '/assets/js/player.js',
+  BASE + '/assets/images/placeholder.svg',
+  BASE + '/manifest.json',
 ];
 
-// Install — cache static shell
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(c => c.addAll(STATIC)).then(() => self.skipWaiting())
   );
 });
 
-// Activate — delete old caches
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
@@ -38,21 +37,11 @@ self.addEventListener('activate', e => {
   );
 });
 
-// Fetch strategy:
-// - HTML: Network first, fallback cache
-// - Data JSON: Network first, fallback cache, stale-while-revalidate
-// - Assets: Cache first
-// - External CDN: Network only
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
+  if (url.origin !== self.location.origin) return;
 
-  // External (CDN, fonts, APIs) — network only
-  if (url.origin !== self.location.origin) {
-    return;
-  }
-
-  // Data JSON — network first with cache fallback
-  if (url.pathname.startsWith('/data/')) {
+  if (url.pathname.startsWith(BASE + '/data/')) {
     e.respondWith(
       fetch(e.request)
         .then(res => {
@@ -65,16 +54,14 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // HTML pages — network first
   if (e.request.mode === 'navigate') {
     e.respondWith(
       fetch(e.request)
-        .catch(() => caches.match(e.request) || caches.match('/index.html'))
+        .catch(() => caches.match(e.request) || caches.match(BASE + '/index.html'))
     );
     return;
   }
 
-  // Assets — cache first
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;

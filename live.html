@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#000000">
   <title>Live — Ryounime</title>
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
-  <link rel="stylesheet" href="/assets/css/base.css">
-  <link rel="stylesheet" href="/assets/css/nav.css">
-  <link rel="stylesheet" href="/assets/css/player.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/nav.css">
+  <link rel="stylesheet" href="assets/css/player.css">
   <style>
     .live-page { padding-top: 0; padding-bottom: calc(var(--bottom-nav-h) + 16px); }
 
@@ -146,29 +146,29 @@
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="nav-items">
-    <a href="/" class="nav-item">
+    <a href="index.html" class="nav-item">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/>
       </svg><span>Home</span>
     </a>
-    <a href="/search.html" class="nav-item">
+    <a href="search.html" class="nav-item">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4" stroke-linecap="round"/>
       </svg><span>Cari</span>
     </a>
-    <a href="/live.html" class="nav-item active">
+    <a href="live.html" class="nav-item active">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3"/>
         <path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/>
         <path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13" stroke-linecap="round"/>
       </svg><span>Live</span>
     </a>
-    <a href="/favorites.html" class="nav-item">
+    <a href="favorites.html" class="nav-item">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
       </svg><span>Favorit</span>
     </a>
-    <a href="/settings.html" class="nav-item">
+    <a href="settings.html" class="nav-item">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3"/>
         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -179,7 +179,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
 <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-<script src="/assets/js/utils.js"></script>
+<script src="assets/js/utils.js"></script>
 <script>
 (async function() {
   let allChannels = [], filterCat = '';
@@ -187,7 +187,7 @@
 
   // Load channels
   try {
-    allChannels = await fetchJSON('/data/live/channels.json');
+    allChannels = await fetchJSON('data/live/channels.json');
   } catch {
     document.getElementById('channel-list').innerHTML =
       '<div style="padding:32px 16px;text-align:center;color:var(--text-muted);font-size:13px">Data channel tidak tersedia.</div>';

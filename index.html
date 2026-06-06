@@ -8,14 +8,14 @@
   <title>Ryounime</title>
 
   <!-- PWA -->
-  <link rel="manifest" href="/manifest.json">
-  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
 
   <!-- CSS -->
-  <link rel="stylesheet" href="/assets/css/base.css">
-  <link rel="stylesheet" href="/assets/css/nav.css">
-  <link rel="stylesheet" href="/assets/css/hero.css">
-  <link rel="stylesheet" href="/assets/css/card.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/nav.css">
+  <link rel="stylesheet" href="assets/css/hero.css">
+  <link rel="stylesheet" href="assets/css/card.css">
 </head>
 <body>
 
@@ -61,7 +61,7 @@
   <section class="section" id="continue-section" style="display:none">
     <div class="section-header">
       <span class="section-title">Lanjut Nonton</span>
-      <a href="/history.html" class="section-more">Lihat semua</a>
+      <a href="history.html" class="section-more">Lihat semua</a>
     </div>
     <div class="scroll-row" id="continue-row"></div>
   </section>
@@ -70,7 +70,7 @@
   <section class="section">
     <div class="section-header">
       <span class="section-title">🔥 Trending</span>
-      <a href="/search.html?sort=trending" class="section-more">Lihat semua</a>
+      <a href="search.html?sort=trending" class="section-more">Lihat semua</a>
     </div>
     <div class="scroll-row" id="trending-row"></div>
   </section>
@@ -79,7 +79,7 @@
   <section class="section">
     <div class="section-header">
       <span class="section-title">🆕 Update Terbaru</span>
-      <a href="/search.html?sort=latest" class="section-more">Lihat semua</a>
+      <a href="search.html?sort=latest" class="section-more">Lihat semua</a>
     </div>
     <div class="scroll-row" id="latest-row"></div>
   </section>
@@ -88,7 +88,7 @@
   <section class="section">
     <div class="section-header">
       <span class="section-title">⭐ Populer</span>
-      <a href="/search.html?sort=popular" class="section-more">Lihat semua</a>
+      <a href="search.html?sort=popular" class="section-more">Lihat semua</a>
     </div>
     <div class="scroll-row" id="popular-row"></div>
   </section>
@@ -97,7 +97,7 @@
   <section class="section">
     <div class="section-header">
       <span class="section-title">🎬 Rilis Baru</span>
-      <a href="/search.html?sort=new" class="section-more">Lihat semua</a>
+      <a href="search.html?sort=new" class="section-more">Lihat semua</a>
     </div>
     <div class="scroll-row" id="new-release-row"></div>
   </section>
@@ -107,20 +107,20 @@
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="nav-items">
-    <a href="/" class="nav-item active">
+    <a href="index.html" class="nav-item active">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
         <path d="M9 21V12h6v9"/>
       </svg>
       <span>Home</span>
     </a>
-    <a href="/search.html" class="nav-item">
+    <a href="search.html" class="nav-item">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4" stroke-linecap="round"/>
       </svg>
       <span>Cari</span>
     </a>
-    <a href="/live.html" class="nav-item">
+    <a href="live.html" class="nav-item">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3"/>
         <path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/>
@@ -128,13 +128,13 @@
       </svg>
       <span>Live</span>
     </a>
-    <a href="/favorites.html" class="nav-item">
+    <a href="favorites.html" class="nav-item">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
       </svg>
       <span>Favorit</span>
     </a>
-    <a href="/settings.html" class="nav-item">
+    <a href="settings.html" class="nav-item">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3"/>
         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -145,8 +145,8 @@
 </nav>
 
 <!-- JS -->
-<script src="/assets/js/utils.js"></script>
-<script src="/assets/js/app.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/app.js"></script>
 <script>
 (async function() {
   // ===== HERO =====
@@ -160,7 +160,7 @@
     slidesEl.innerHTML = banners.map(a => `
       <div class="hero-slide">
         <div class="hero-bg">
-          <img data-src="${a.banner}" alt="${a.title}" src="/assets/images/placeholder.svg">
+          <img data-src="${a.banner}" alt="${a.title}" src="assets/images/placeholder.svg">
         </div>
         <div class="hero-content">
           <div class="hero-type-badge">${a.type || 'TV'}</div>
@@ -172,11 +172,11 @@
             ${a.rating ? `<span class="dot"></span><span>⭐ ${a.rating}</span>` : ''}
           </div>
           <div class="hero-actions">
-            <a href="/watch.html?id=${a.id}&ep=1" class="btn-watch">
+            <a href="watch.html?id=${a.id}&ep=1" class="btn-watch">
               <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
               Tonton
             </a>
-            <a href="/details.html?id=${a.id}" class="btn-info">
+            <a href="details.html?id=${a.id}" class="btn-info">
               <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8"/><line x1="12" y1="12" x2="12" y2="16"/>
               </svg>
@@ -209,9 +209,9 @@
   function cardHtml(a) {
     const progress = ContinueWatching.getProgress(a.id);
     return `
-      <a href="/details.html?id=${a.id}" class="card card-poster">
+      <a href="details.html?id=${a.id}" class="card card-poster">
         <div class="card-thumb">
-          <img data-src="${a.poster || '/assets/images/placeholder.svg'}" alt="${a.title}" src="/assets/images/placeholder.svg" loading="lazy">
+          <img data-src="${a.poster || '/assets/images/placeholder.svg'}" alt="${a.title}" src="assets/images/placeholder.svg" loading="lazy">
           <div class="card-overlay"></div>
           <div class="card-badges">
             ${a.type ? `<span class="badge badge-accent">${a.type}</span>` : ''}
@@ -234,9 +234,9 @@
   function wideCardHtml(item) {
     const progress = item.duration ? item.time / item.duration : 0;
     return `
-      <a href="/watch.html?id=${item.animeId}&ep=${item.ep}" class="card card-wide">
+      <a href="watch.html?id=${item.animeId}&ep=${item.ep}" class="card card-wide">
         <div class="card-thumb">
-          <img data-src="${item.poster || '/assets/images/placeholder.svg'}" alt="${item.animeTitle}" src="/assets/images/placeholder.svg" loading="lazy">
+          <img data-src="${item.poster || '/assets/images/placeholder.svg'}" alt="${item.animeTitle}" src="assets/images/placeholder.svg" loading="lazy">
           <div class="card-overlay"></div>
           <div class="card-progress">
             <div class="card-progress-bar" style="width:${Math.min(progress*100,100)}%"></div>

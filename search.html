@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0a0a0f">
   <title>Cari — Ryounime</title>
-  <link rel="stylesheet" href="/assets/css/base.css">
-  <link rel="stylesheet" href="/assets/css/nav.css">
-  <link rel="stylesheet" href="/assets/css/card.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/nav.css">
+  <link rel="stylesheet" href="assets/css/card.css">
   <style>
     .search-page { padding: calc(var(--header-h) + 8px) 0 calc(var(--bottom-nav-h) + 16px); }
 
@@ -181,27 +181,27 @@
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="nav-items">
-    <a href="/" class="nav-item">
+    <a href="index.html" class="nav-item">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/>
       </svg><span>Home</span>
     </a>
-    <a href="/search.html" class="nav-item active">
+    <a href="search.html" class="nav-item active">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4" stroke-linecap="round"/>
       </svg><span>Cari</span>
     </a>
-    <a href="/live.html" class="nav-item">
+    <a href="live.html" class="nav-item">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/>
       </svg><span>Live</span>
     </a>
-    <a href="/favorites.html" class="nav-item">
+    <a href="favorites.html" class="nav-item">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
       </svg><span>Favorit</span>
     </a>
-    <a href="/settings.html" class="nav-item">
+    <a href="settings.html" class="nav-item">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3"/>
         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -210,8 +210,8 @@
   </div>
 </nav>
 
-<script src="/assets/js/utils.js"></script>
-<script src="/assets/js/app.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/app.js"></script>
 <script>
 (async function() {
   let allAnime = [];
@@ -310,9 +310,9 @@
     }
 
     grid.innerHTML = result.slice(0, 60).map(a => `
-      <a href="/details.html?id=${a.id}" class="card card-poster fade-in">
+      <a href="details.html?id=${a.id}" class="card card-poster fade-in">
         <div class="card-thumb">
-          <img data-src="${a.poster || '/assets/images/placeholder.svg'}" alt="${a.title}" src="/assets/images/placeholder.svg">
+          <img data-src="${a.poster || '/assets/images/placeholder.svg'}" alt="${a.title}" src="assets/images/placeholder.svg">
           <div class="card-overlay"></div>
           ${a.type ? `<div class="card-badges"><span class="badge badge-accent">${a.type}</span></div>` : ''}
           ${a.total_eps ? `<div class="card-ep-badge">${a.total_eps} ep</div>` : ''}

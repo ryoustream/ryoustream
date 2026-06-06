@@ -16,12 +16,12 @@ const App = (() => {
 
   // ===== INDEX =====
   async function getAnimeIndex() {
-    return loadJSON('/data/anime/index.json');
+    return loadJSON('data/anime/index.json');
   }
 
   async function getAnimeById(id) {
     try {
-      return await loadJSON(`/data/anime/${id}.json`);
+      return await loadJSON(`data/anime/${id}.json`);
     } catch {
       // Fallback: search index
       const index = await getAnimeIndex();
@@ -30,7 +30,7 @@ const App = (() => {
   }
 
   async function getEpisodes(animeId) {
-    return loadJSON(`/data/episodes/${animeId}.json`);
+    return loadJSON(`data/episodes/${animeId}.json`);
   }
 
   async function getEpisode(animeId, ep) {
@@ -79,7 +79,7 @@ const App = (() => {
   }
 
   async function getSchedule() {
-    return loadJSON('/data/schedule/weekly.json');
+    return loadJSON('data/schedule/weekly.json');
   }
 
   // ===== SEARCH =====
