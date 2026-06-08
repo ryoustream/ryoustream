@@ -4,7 +4,7 @@
  */
 
 const App = (() => {
-  const API = 'https://ryoustream.vercel.app';
+  const API = 'https://ryounime.vercel.app';
   const _cache = new Map();
 
   // ===== API FETCH dengan cache =====
