@@ -197,23 +197,21 @@
     this.lastChild.textContent = added ? ' Di Watchlist' : ' Watchlist';
   });
 
-  // Recommendations
+  // Recommendations dari AniList API
   try {
-    const all = await App.getAnimeIndex();
-    const recs = getRecommendations(anime, all, 10);
+    const recs = anime.recommendations || [];
     if (recs.length) {
-      const relSection = document.getElementById('related-section');
-      relSection.style.display = '';
+      document.getElementById('related-section').style.display = '';
       const relRow = document.getElementById('related-row');
-      relRow.innerHTML = recs.map(a => `
+      relRow.innerHTML = recs.slice(0,10).map(a => `
         <a href="details.html?id=${a.id}" class="card card-poster">
           <div class="card-thumb">
-            <img data-src="${a.poster || '/assets/images/placeholder.svg'}" alt="${a.title}" src="assets/images/placeholder.svg">
+            <img data-src="${a.poster || 'assets/images/placeholder.svg'}" alt="${a.title}" src="assets/images/placeholder.svg">
             <div class="card-overlay"></div>
           </div>
           <div class="card-info">
             <div class="card-title line-clamp-2">${a.title}</div>
-            <div class="card-meta"><span>${a.year || ''}</span></div>
+            <div class="card-meta">${a.rating ? `<span>⭐ ${a.rating}</span>` : ''}</div>
           </div>
         </a>
       `).join('');

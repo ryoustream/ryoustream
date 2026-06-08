@@ -5,27 +5,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
   <title>Watch — Ryounime</title>
-
-  <!-- Plyr -->
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
-
   <link rel="stylesheet" href="assets/css/base.css">
   <link rel="stylesheet" href="assets/css/nav.css">
   <link rel="stylesheet" href="assets/css/card.css">
   <link rel="stylesheet" href="assets/css/player.css">
+  <style>
+    /* Subtitle overlay */
+    #ryou-subtitle {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.5;
+      padding: 4px 12px;
+      border-radius: 4px;
+      text-align: center;
+      max-width: 90%;
+      z-index: 10;
+      pointer-events: none;
+      display: none;
+      white-space: pre-line;
+    }
+    .sub-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .sub-bar select {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      outline: none;
+    }
+    .sub-status {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
 
 <div class="watch-page">
 
   <!-- VIDEO -->
-  <div class="video-wrap" id="video-wrap">
+  <div class="video-wrap" id="video-wrap" style="position:relative">
     <video id="ryou-video" playsinline></video>
+    <div id="ryou-subtitle"></div>
   </div>
 
   <!-- SOURCE BAR -->
-  <div style="padding:10px 0 2px">
-    <div class="source-bar" id="source-bar"></div>
+  <div style="padding:8px 0 0">
+    <div class="source-bar" id="source-bar">
+      <div style="padding:8px 16px;color:var(--text-muted);font-size:12px">Memuat sumber…</div>
+    </div>
+  </div>
+
+  <!-- SUBTITLE BAR -->
+  <div class="sub-bar">
+    <span>Subtitle:</span>
+    <select id="sub-select">
+      <option value="off">Nonaktif</option>
+      <option value="id" selected>Indonesia (Auto-translate)</option>
+      <option value="en">English (Original)</option>
+    </select>
+    <span class="sub-status" id="sub-status"></span>
   </div>
 
   <!-- WATCH INFO -->
@@ -52,7 +107,9 @@
       <div class="ep-filter" id="ep-filter"></div>
     </div>
     <div class="ep-grid" id="ep-grid">
-      <div style="grid-column:1/-1;display:flex;justify-content:center;padding:16px"><div class="spinner"></div></div>
+      <div style="grid-column:1/-1;display:flex;justify-content:center;padding:20px">
+        <div class="spinner"></div>
+      </div>
     </div>
   </div>
 
@@ -98,67 +155,77 @@
   </div>
 </nav>
 
-<!-- HLS.js + Plyr -->
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
 <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-
 <script src="assets/js/utils.js"></script>
 <script src="assets/js/app.js"></script>
 <script src="assets/js/player.js"></script>
 <script>
-(async function() {
+(async function () {
   const animeId = getParam('id');
   let currentEp = Number(getParam('ep')) || 1;
   if (!animeId) { location.href = 'index.html'; return; }
 
-  // Init auto-next toggle
+  // Auto-next toggle
   const autoNextToggle = document.getElementById('auto-next-toggle');
-  autoNextToggle.checked = Settings.get('autoNext');
+  autoNextToggle.checked = Settings.get('autoNext') !== false;
   autoNextToggle.addEventListener('change', () => Settings.set('autoNext', autoNextToggle.checked));
 
-  let anime, episodes;
+  let anime = null;
+  let epList = [];
+  let currentSubMode = document.getElementById('sub-select').value;
+
+  // Load anime info
   try {
-    [anime, episodes] = await Promise.all([
-      App.getAnimeById(animeId),
-      App.getEpisodes(animeId),
-    ]);
-  } catch(e) {
+    anime = await App.getAnimeById(animeId);
+    document.title = `${anime.title} — Ryounime`;
+    document.getElementById('watch-title').textContent = anime.title;
+    document.getElementById('watch-meta-row').innerHTML = `
+      ${anime.type ? `<span class="badge badge-accent">${anime.type}</span>` : ''}
+      ${anime.year ? `<span class="badge badge-dark">${anime.year}</span>` : ''}
+      ${anime.status ? `<span class="badge badge-dark">${anime.status}</span>` : ''}
+    `;
+  } catch (e) {
     document.getElementById('watch-title').textContent = 'Gagal memuat data.';
+    console.error(e);
     return;
   }
 
-  document.title = `${anime.title} — Ryounime`;
-  document.querySelector('.watch-title').textContent = anime.title;
-
-  // Meta
-  document.getElementById('watch-meta-row').innerHTML = `
-    ${anime.type ? `<span class="badge badge-accent">${anime.type}</span>` : ''}
-    ${anime.year ? `<span class="badge badge-dark">${anime.year}</span>` : ''}
-    ${anime.status ? `<span class="badge badge-dark">${anime.status}</span>` : ''}
-  `;
-
-  // ===== EPISODE GRID =====
+  // Load episode list
   const CHUNK = 50;
   let epChunk = 0;
 
-  function getWatchedEps() {
-    return Storage.get(`watched_${animeId}`, []);
+  try {
+    const epData = await App.getEpisodeList(animeId);
+    epList = epData.episodes || [];
+    // Fallback: generate from total_eps
+    if (!epList.length && anime.total_eps) {
+      epList = Array.from({ length: anime.total_eps }, (_, i) => ({ ep: i + 1 }));
+    }
+  } catch {
+    if (anime.total_eps) {
+      epList = Array.from({ length: anime.total_eps }, (_, i) => ({ ep: i + 1 }));
+    }
   }
+
+  function getWatchedEps() { return Storage.get(`w_${animeId}`, []); }
   function markWatched(ep) {
     const w = getWatchedEps();
-    if (!w.includes(ep)) { w.push(ep); Storage.set(`watched_${animeId}`, w); }
+    if (!w.includes(ep)) { w.push(ep); Storage.set(`w_${animeId}`, w); }
   }
 
   function renderEpGrid(chunk = 0) {
     const watched = getWatchedEps();
     const start = chunk * CHUNK;
-    const slice = episodes.slice(start, start + CHUNK);
+    const slice = epList.slice(start, start + CHUNK);
     const grid = document.getElementById('ep-grid');
+    if (!slice.length) {
+      grid.innerHTML = '<div style="grid-column:1/-1;color:var(--text-muted);font-size:12px;padding:16px">Belum ada episode.</div>';
+      return;
+    }
     grid.innerHTML = slice.map(e => `
       <button class="ep-btn ${e.ep === currentEp ? 'active' : ''} ${watched.includes(e.ep) && e.ep !== currentEp ? 'watched' : ''}"
-              data-ep="${e.ep}">
-        ${e.ep}
-      </button>
+              data-ep="${e.ep}">${e.ep}</button>
     `).join('');
     grid.querySelectorAll('.ep-btn').forEach(btn => {
       btn.addEventListener('click', () => loadEp(Number(btn.dataset.ep)));
@@ -167,11 +234,11 @@
 
   function renderEpFilter() {
     const filter = document.getElementById('ep-filter');
-    const chunks = Math.ceil(episodes.length / CHUNK);
+    const chunks = Math.ceil(epList.length / CHUNK);
     if (chunks <= 1) return;
     filter.innerHTML = Array.from({ length: chunks }, (_, i) => {
       const s = i * CHUNK + 1;
-      const e = Math.min((i + 1) * CHUNK, episodes.length);
+      const e = Math.min((i + 1) * CHUNK, epList.length);
       return `<button class="ep-range-btn ${i === 0 ? 'active' : ''}" data-chunk="${i}">${s}–${e}</button>`;
     }).join('');
     filter.querySelectorAll('.ep-range-btn').forEach(btn => {
@@ -189,86 +256,108 @@
   // ===== LOAD EPISODE =====
   async function loadEp(ep) {
     currentEp = ep;
-    const epData = await App.getEpisode(animeId, ep);
-    if (!epData) { alert('Episode tidak ditemukan.'); return; }
-
-    document.getElementById('watch-ep-label').textContent =
-      epData.title ? `EP ${ep} — ${epData.title}` : `Episode ${ep}`;
-
-    // Update URL
     history.replaceState(null, '', buildUrl('watch.html', { id: animeId, ep }));
 
-    // Source bar
-    const srcManager = App.createSourceManager(epData);
-    const sourceBar = document.getElementById('source-bar');
-    sourceBar.innerHTML = srcManager.sources.map((s, i) => `
-      <button class="source-chip ${i === 0 ? 'active' : ''}" data-i="${i}">
-        <span class="dot"></span>
-        ${s.name || `Sumber ${i+1}`}
-      </button>
-    `).join('');
-    sourceBar.querySelectorAll('.source-chip').forEach(btn => {
-      btn.addEventListener('click', () => Player.selectSource(Number(btn.dataset.i)));
-    });
+    document.getElementById('watch-ep-label').textContent = `Episode ${ep}`;
+    document.getElementById('source-bar').innerHTML =
+      '<div style="padding:8px 16px;color:var(--text-muted);font-size:12px">Memuat sumber…</div>';
 
-    // Player
-    Player.destroy();
-    Player.init({ animeId, ep, srcManager });
-
-    // Mark watched
     markWatched(ep);
     History.add({ animeId, animeTitle: anime.title, ep, poster: anime.poster });
+
+    // Refresh grid
+    const chunk = Math.floor((ep - 1) / CHUNK);
+    if (chunk !== epChunk) {
+      epChunk = chunk;
+      document.querySelectorAll('.ep-range-btn').forEach((b, i) => b.classList.toggle('active', i === chunk));
+    }
+    renderEpGrid(epChunk);
+    setTimeout(() => document.querySelector('.ep-btn.active')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 100);
+
+    // Fetch sources
+    let sources = [];
+    try {
+      const data = await App.getEpisodeSources(animeId, ep);
+      sources = data.sources || [];
+    } catch (e) {
+      console.error('[Watch] Gagal fetch sources:', e);
+    }
+
+    // Render source bar
+    const sourceBar = document.getElementById('source-bar');
+    if (sources.length) {
+      sourceBar.innerHTML = sources.map((s, i) => `
+        <button class="source-chip ${i === 0 ? 'active' : ''}" data-i="${i}">
+          <span class="dot"></span>${s.name || 'Sumber ' + (i + 1)}
+        </button>
+      `).join('');
+      sourceBar.querySelectorAll('.source-chip').forEach(btn => {
+        btn.addEventListener('click', () => Player.selectSource(Number(btn.dataset.i)));
+      });
+    } else {
+      sourceBar.innerHTML = '<div style="padding:8px 16px;color:var(--text-muted);font-size:12px">⚠️ Sumber tidak ditemukan</div>';
+    }
+
+    const srcManager = App.createSourceManager(sources);
+    Player.init({ animeId, ep, srcManager });
 
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Refresh ep grid
-    const chunk = Math.floor((ep - 1) / CHUNK);
-    if (chunk !== epChunk) {
-      epChunk = chunk;
-      document.querySelectorAll('.ep-range-btn').forEach((b,i) => b.classList.toggle('active', i === chunk));
-      renderEpGrid(chunk);
-    } else {
-      renderEpGrid(epChunk);
+    // Load subtitle jika aktif
+    if (currentSubMode !== 'off') {
+      loadSubtitle(animeId, ep, currentSubMode);
     }
-
-    // Scroll ep into view
-    setTimeout(() => {
-      const activeBtn = document.querySelector('.ep-btn.active');
-      activeBtn?.scrollIntoView({ block: 'nearest' });
-    }, 100);
   }
 
+  // ===== SUBTITLE =====
+  async function loadSubtitle(animeId, ep, mode) {
+    const statusEl = document.getElementById('sub-status');
+    statusEl.textContent = mode === 'id' ? 'Menerjemahkan…' : 'Memuat…';
+    Player.setSubtitles([]);
+
+    // Gogoanime tidak punya sub Indonesia — skip untuk sekarang
+    // Placeholder: subtitle akan ditambah nanti dari sumber eksternal
+    statusEl.textContent = '';
+  }
+
+  // Subtitle select
+  document.getElementById('sub-select').addEventListener('change', function () {
+    currentSubMode = this.value;
+    if (currentSubMode === 'off') {
+      Player.setSubtitles([]);
+      document.getElementById('sub-status').textContent = '';
+    } else {
+      loadSubtitle(animeId, currentEp, currentSubMode);
+    }
+  });
+
+  // ===== LOAD =====
   await loadEp(currentEp);
 
-  // ===== RECOMMENDATIONS =====
-  try {
-    const all = await App.getAnimeIndex();
-    const recs = getRecommendations(anime, all, 8);
-    if (recs.length) {
-      const relSection = document.getElementById('related-section');
-      relSection.style.display = '';
-      document.getElementById('related-row').innerHTML = recs.map(a => `
-        <a href="details.html?id=${a.id}" class="card card-poster">
-          <div class="card-thumb">
-            <img data-src="${a.poster || '/assets/images/placeholder.svg'}" alt="${a.title}" src="assets/images/placeholder.svg">
-            <div class="card-overlay"></div>
-          </div>
-          <div class="card-info">
-            <div class="card-title line-clamp-2">${a.title}</div>
-            <div class="card-meta"><span>${a.year || ''}</span></div>
-          </div>
-        </a>
-      `).join('');
-      initLazyImages(document.getElementById('related-row'));
-    }
-  } catch {}
+  // ===== RELATED =====
+  if (anime.recommendations?.length) {
+    document.getElementById('related-section').style.display = '';
+    document.getElementById('related-row').innerHTML = anime.recommendations.slice(0, 8).map(a => `
+      <a href="details.html?id=${a.id}" class="card card-poster">
+        <div class="card-thumb">
+          <img data-src="${a.poster || 'assets/images/placeholder.svg'}" alt="${a.title}" src="assets/images/placeholder.svg">
+          <div class="card-overlay"></div>
+        </div>
+        <div class="card-info">
+          <div class="card-title line-clamp-2">${a.title}</div>
+          <div class="card-meta">${a.rating ? `<span>⭐ ${a.rating}</span>` : ''}</div>
+        </div>
+      </a>
+    `).join('');
+    initLazyImages(document.getElementById('related-row'));
+  }
 
 })();
 </script>
 
 <script>
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
 </html>

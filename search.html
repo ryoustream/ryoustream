@@ -217,16 +217,24 @@
   let allAnime = [];
   let query = '', sortBy = getParam('sort') || '', filterType = '', filterStatus = '';
 
-  // Load genre from URL
   const genreParam = getParam('genre');
-  if (genreParam) query = '';
-
   const grid = document.getElementById('results-grid');
   const countEl = document.getElementById('results-count');
 
-  // Load all
+  // Load initial data dari API
+  countEl.textContent = 'Memuat…';
   try {
-    allAnime = await App.getAnimeIndex();
+    // Load popular sebagai data awal (300 item dari multiple pages)
+    const [t, p, r] = await Promise.all([
+      App.getTrending(50),
+      App.getPopular(50),
+      App.getLatestUpdate(50),
+    ]);
+    // Deduplicate by id
+    const seen = new Set();
+    for (const a of [...t, ...p, ...r]) {
+      if (!seen.has(a.id)) { seen.add(a.id); allAnime.push(a); }
+    }
   } catch {
     countEl.textContent = 'Gagal memuat data.';
     return;
@@ -270,10 +278,19 @@
   });
 
   // Search input
-  document.getElementById('search-input').addEventListener('input', debounce(e => {
+  document.getElementById('search-input').addEventListener('input', debounce(async e => {
     query = e.target.value.trim();
+    if (query.length >= 2) {
+      try {
+        const apiResults = await App.search(query);
+        const seen = new Set(allAnime.map(a => a.id));
+        for (const a of apiResults) {
+          if (!seen.has(a.id)) { seen.add(a.id); allAnime.push(a); }
+        }
+      } catch {}
+    }
     render();
-  }, 300));
+  }, 400));
 
   function sortList(list) {
     switch (sortBy) {
